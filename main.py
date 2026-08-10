@@ -55,12 +55,14 @@ async def on_my_chat_member_update(update: ChatMemberUpdated):
     """Отслеживает добавление и удаление бота из администраторов каналов"""
     chat_id = update.chat.id
     chat_title = update.chat.title or f"Чат {chat_id}"
-    new_status = update.new_chat_member.status
+    
+    # Приводим статус к строке в нижнем регистре для 100% точной проверки
+    new_status = str(update.new_chat_member.status).lower()
 
-    if new_status in [ADMINISTRATOR, CREATOR]:
+    if "administrator" in new_status or "creator" in new_status:
         channels[chat_id] = chat_title
         logging.info(f"Бот добавлен как админ в: {chat_title} ({chat_id})")
-    elif new_status in [KICKED, LEFT]:
+    elif "kicked" in new_status or "left" in new_status:
         if chat_id in channels:
             del channels[chat_id]
             logging.info(f"Бот удален из: {chat_title} ({chat_id})")
@@ -313,7 +315,8 @@ async def finish_giveaway_cmd(message: types.Message):
 async def main():
     # Запускаем одновременно веб-сервер для пинга и самого бота
     await start_web_server()
-    await dp.start_polling(bot)
+    # Запрашиваем у Telegram все типы обновлений, включая my_chat_member
+    await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
 
 if __name__ == "__main__":
     asyncio.run(main())
