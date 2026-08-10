@@ -164,10 +164,8 @@ async def info_cmd(message: types.Message):
     await message.answer(
         "ℹ️ <b>Информация:</b>\n\n"
         "Бот позволяет принимать участие в конкурсах и розыгрышах Telegram-каналов.\n"
-        "Бот для канала является платным, стоимость использования в канале 300₽-месяц
-         .для покупки писать @cera_code.",
-        parse_mode="HTML"
-    )
+        "Бот для канала является платным, стоимость использования 300₽-мес. \n"
+        parse_mode="HTMLHTML  )
 
 @dp.message(F.text == "👤 Профиль")
 async def profile_cmd(message: types.Message):
